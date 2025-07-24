@@ -88,3 +88,27 @@ user: student
 pass: student
 
 ```
+
+### NFS Server setup on bastion host 
+
+``` 
+sudo dnf install nfs-utils -y     
+sudo systemctl enable --now nfs-server
+
+sudo useradd netuserX
+sudo passwd netuserX   # set to ablerate
+
+sudo mkdir -p /home/guests/netuserX
+sudo chown netuserX:netuserX /home/guests/netuserX
+sudo chmod 700 /home/guests/netuserX
+```
+
+sudo nano /etc/exports
+
+```
+/home/guests/netuserX  *(rw,sync,no_root_squash)
+sudo exportfs -rav
+
+#check export list 
+exportfs -v 
+```
