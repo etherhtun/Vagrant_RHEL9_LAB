@@ -88,6 +88,33 @@ user: student
 pass: student
 
 ```
+### Create Repo server on bastion host 
+
+1) Mount the ISO on Bastion VM 
+```
+dd if=/dev/sr0 of=/rhel9.iso bs=1M 
+mkdir -p /repo/rhel9 
+
+vi /etc/fstab 
+/rhel9.iso  /repo/rhel9 is09660 defaults 0 0 
+
+mount -a 
+
+ls /repo/rhel9
+```
+3) Run Http server 
+```
+sudo dnf install -y httpd
+sudo systemctl enable --now httpd
+sudo ln -s /repo/rhel9 /var/www/html/rhel9
+```
+4) allow Firewall 
+```
+sudo chcon -R -t httpd_sys_content_t /repo/rhel9
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --reload
+``` 
+
 
 ### NFS Server setup on bastion host 
 
