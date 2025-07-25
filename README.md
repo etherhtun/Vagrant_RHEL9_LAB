@@ -119,23 +119,28 @@ sudo firewall-cmd --reload
 ### NFS Server setup on bastion host 
 
 ``` 
-sudo dnf install nfs-utils -y     
+sudo dnf install nfs-utils autofs -y     
 sudo systemctl enable --now nfs-server
-
-sudo useradd netuserX
-sudo passwd netuserX   # set to ablerate
-
-sudo mkdir -p /home/guests/netuserX
-sudo chown netuserX:netuserX /home/guests/netuserX
-sudo chmod 700 /home/guests/netuserX
+sudo mkdir -p /home/guests/netuser{1,2,3}
 ```
-
-sudo nano /etc/exports
+edit export file  "/etc/exports"
 
 ```
-/home/guests/netuserX  *(rw,sync,no_root_squash)
+/home/guests  *(rw,sync,no_root_squash)
 sudo exportfs -rav
 
 #check export list 
 exportfs -v 
+
+```
+
+Open Firewall 
+
+```
+sudo firewall-cmd --permanent --add-service=nfs
+sudo firewall-cmd --permanent --add-service=mountd
+sudo firewall-cmd --permanent --add-service=rpc-bind
+sudo firewall-cmd --reload
+
+#optional "for i in nfs mountd rpc-bind; do firewall-cmd --permanent --add-service=$i; done"
 ```
