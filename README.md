@@ -144,3 +144,26 @@ sudo firewall-cmd --reload
 
 #optional "for i in nfs mountd rpc-bind; do firewall-cmd --permanent --add-service=$i; done"
 ```
+
+### NTP Server 
+
+```
+dnf install chrony -y 
+systemctl enable --now chrony 
+```
+
+Allow NTP Clients  "/etc/chrony.conf"
+
+```
+allow 192.168.163.0/23
+local stratum 10 
+```
+Enable Firewall 
+
+```
+firewall-cmd --add-service=ntp --permanent
+firewall-cmd --reload
+```
+
+
+
